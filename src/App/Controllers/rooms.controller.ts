@@ -10,7 +10,6 @@ class RoomController{
     static getUnderoccupiedBuildingRoom(req: Request, res: Response){
         //todo
     }
-
 }
 
 export default RoomController;
