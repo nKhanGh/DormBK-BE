@@ -1,5 +1,4 @@
 import express from 'express';
-const path = require('path');
 import route from './Routes/index';
 
 const app = express();

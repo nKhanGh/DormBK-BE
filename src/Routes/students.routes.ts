@@ -2,12 +2,12 @@ import express from 'express';
 const router = express.Router();
 import StudentController from '../App/Controllers/students.controller';
 
-router.get('/api/students', StudentController.getStudent);
-router.get('/api/students/:ssn', StudentController.getStudentBySsn);
-router.post('/api/students', StudentController.post);
-router.put('/api/students/:ssn', StudentController.put);
-router.delete('/api/students/:ssn', StudentController.delete);
-router.get('/api/students/no-relatives', StudentController.getNoRelative);
+router.get('/', StudentController.getStudent);
+router.get('/:ssn', StudentController.getStudentBySsn);
+router.post('', StudentController.post);
+router.put('/:ssn', StudentController.put);
+router.delete('/:ssn', StudentController.delete);
+router.get('/no-relatives', StudentController.getNoRelative);
 
 
 
