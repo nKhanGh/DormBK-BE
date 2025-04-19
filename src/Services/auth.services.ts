@@ -1,48 +1,58 @@
-import { RowDataPacket } from "mysql2/promise";
-import bcrypt from "bcryptjs"; // mã hóa mật khẩu
-import jwt from "jsonwebtoken"; // tạo và kiểm tra token
-import db from "../Config/dp.config";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import prisma from "../Config/prisma.config";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 
-type manager = {
+type Manager = {
   user_name: string;
   password: string;
 };
 
-// hamf tạo mật khẩu
-async function seedUser() {
-  const connection = await db();
-  const password = "admin123";
-  const hashed = await bcrypt.hash(password, 10);
+export async function seedUser() {
+  const user_name = "sManager";
+  const plainPassword = "admin123";
+  const hashedPassword = await bcrypt.hash(plainPassword, 10);
 
-  await connection.query(
-    "INSERT INTO managerDorm (user_name, password) VALUES (?, ?)",
-    ["sManager", hashed]
-  );
+  const existing = await prisma.managerDorm.findFirst({
+    where: { user_name },
+  });
 
-  console.log("User sManager seeded with hashed password:", hashed);
-  await connection.end();
+  if (!existing) {
+    await prisma.managerDorm.create({
+      data: {
+        user_name,
+        password: hashedPassword,
+      },
+    });
+
+    console.log(`User ${user_name} seeded with password: ${plainPassword}`);
+  } else {
+    console.log(`User ${user_name} already exists.`);
+  }
 }
 
 export const login = async (data: { user_name: string; password: string }) => {
   const { user_name, password } = data;
 
-  const connection = await db();
-  const [managers] = await connection.query<(manager & RowDataPacket)[]>(
-    "SELECT * FROM managerDorm WHERE user_name = ?",
-    [user_name]
-  );
+  const manager = await prisma.managerDorm.findFirst({
+    where: { user_name },
+  });
 
-  const manager = managers[0];
-  if (!manager) throw new Error("Manager not found");
+  if (!manager) {
+    throw new Error("Manager not found");
+  }
 
   const isMatch = await bcrypt.compare(password, manager.password);
-  if (!isMatch) throw new Error("Invalid credentials");
+  if (!isMatch) {
+    throw new Error("Invalid credentials");
+  }
 
-  const token = jwt.sign({ user_name: manager.user_name }, JWT_SECRET, {
-    expiresIn: "1h",
-  });
+  const token = jwt.sign(
+    { user_name: manager.user_name },
+    JWT_SECRET,
+    { expiresIn: "1h" }
+  );
 
   return {
     token,
@@ -50,6 +60,6 @@ export const login = async (data: { user_name: string; password: string }) => {
   };
 };
 
-export const logout = async (req: Request) => {
+export const logout = async (_req: Request) => {
   return;
 };

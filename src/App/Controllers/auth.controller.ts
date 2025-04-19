@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { login } from "../../Services/auth.services";
-import connection from "../../Config/dp.config";
 
 class AuthController {
   static async postLogin(req: Request, res: Response) {

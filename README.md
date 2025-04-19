@@ -16,10 +16,12 @@
 ```bash
 src/
 ├── App/
-│   ├── Controllers/     ← Xử lý request/response
+│   ├── Controllers/     ← Xử lý request/response, gọi service
 │   ├── Middlewares/     ← Middleware cho bảo mật, log, validate,...
-│   ├── Models/          ← Định nghĩa dữ liệu hoặc schema DB
+│   └── Models/          ← Định nghĩa dữ liệu hoặc schema DB
 ├── Config/          ← Cấu hình hệ thống (env, db, jwt, ...)
+├── generated
+│   └── prisma       ← File sinh ra bởi Prisma (schema.prisma, migrations, client)
 ├── Routes/          ← Khai báo route → gọi controller
 ├── Services/        ← Logic nghiệp vụ, thao tác với DB/API
 ├── utils/           ← Hàm tiện ích chung
