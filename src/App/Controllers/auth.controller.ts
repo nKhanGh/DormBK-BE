@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
-import { login } from '../../Services/auth.services';
-import connection from '../../Config/dp.config';
+import { Request, Response } from "express";
+import { login } from "../../Services/auth.services";
+import connection from "../../Config/dp.config";
 
 class AuthController {
   static async postLogin(req: Request, res: Response) {
@@ -13,7 +13,9 @@ class AuthController {
   }
 
   static postLogout(req: Request, res: Response) {
-    res.status(200).json({ message: 'Logged out (frontend should clear token)' });
+    res
+      .status(200)
+      .json({ message: "Logged out (frontend should clear token)" });
   }
 }
 

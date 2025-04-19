@@ -1,4 +1,4 @@
-import mysql from 'mysql2/promise';
+import mysql from "mysql2/promise";
 let connection: mysql.Connection;
 
 async function connect() {
@@ -10,13 +10,13 @@ async function connect() {
       user: "root",
       password: "SympYtUKAztewpaknIMZjUcyoohxiTMm",
       port: 52246,
-      database: 'railway'
+      database: "railway",
     });
 
-    console.log('Connected to MySQL!');
+    console.log("Connected to MySQL!");
     return connection;
   } catch (err) {
-    console.error('Connection error:', err);
+    console.error("Connection error:", err);
     throw err;
   }
 }

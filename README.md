@@ -6,6 +6,8 @@
 
 - ⚙️ Express JS
 - ⛑️ TypeScript
+- 🐬 MySQL
+- 🧩 Node JS
 
 ---
 
@@ -37,7 +39,7 @@ cd DormBK-BE
 npm install
 
 # Chạy development server
-npm start
+npm run dev
 ```
 
 ---
