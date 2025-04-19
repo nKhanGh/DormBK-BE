@@ -6,10 +6,11 @@ async function connect() {
 
   try {
     connection = await mysql.createConnection({
-      host: "localhost",
-      user: "NguyenHuuKhang",
-      password: "Hk@14102005",
-      database: 'ktx'
+      host: "hopper.proxy.rlwy.net",
+      user: "root",
+      password: "SympYtUKAztewpaknIMZjUcyoohxiTMm",
+      port: 52246,
+      database: 'railway'
     });
 
     console.log('Connected to MySQL!');

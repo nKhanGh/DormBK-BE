@@ -28,7 +28,6 @@ async function seedUser() {
 }
 
 export const login = async (data: { user_name: string; password: string }) => {
-    //seedUser();
     const { user_name, password } = data;
   
     const connection = await db();
