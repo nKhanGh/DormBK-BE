@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import { login } from "../../Services/auth.services";
+import { Request, Response } from 'express';
+import { login } from '../../Services/auth.services';
 
 class AuthController {
   static async postLogin(req: Request, res: Response) {
@@ -14,7 +14,7 @@ class AuthController {
   static postLogout(req: Request, res: Response) {
     res
       .status(200)
-      .json({ message: "Logged out (frontend should clear token)" });
+      .json({ message: 'Logged out (frontend should clear token)' });
   }
 }
 

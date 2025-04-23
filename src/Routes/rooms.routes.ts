@@ -1,15 +1,15 @@
-import express from "express";
+import express from 'express';
 const router = express.Router();
-import RoomController from "../App/Controllers/rooms.controller";
+import RoomController from '../App/Controllers/rooms.controller';
 
-router.get("/underoccupied", RoomController.getUnderoccupied);
+router.get('/underoccupied', RoomController.getUnderoccupied);
 router.get(
-  "/underoccupied/:buildingId",
-  RoomController.getUnderoccupiedBuilding
+  '/underoccupied/:buildingId',
+  RoomController.getUnderoccupiedBuilding,
 );
 router.get(
-  "/underoccupied/:buildingId/:roomId",
-  RoomController.getUnderoccupiedBuildingRoom
+  '/underoccupied/:buildingId/:roomId',
+  RoomController.getUnderoccupiedBuildingRoom,
 );
 
 export default router;
