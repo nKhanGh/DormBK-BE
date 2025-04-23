@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 
 class RoomController {
   static getUnderoccupied(req: Request, res: Response) {

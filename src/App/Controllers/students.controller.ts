@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import prisma from "../../Config/prisma.config";
+import { Request, Response } from 'express';
+import prisma from '../../Config/prisma.config';
 
 class StudentController {
   static async getStudent(req: Request, res: Response) {
@@ -69,12 +69,15 @@ class StudentController {
       res.json(updatedStudent);
     } catch (error) {
       if (error instanceof Error) {
-        res.status(500).json({ error: 'Update failed', details: error.message });
+        res
+          .status(500)
+          .json({ error: 'Update failed', details: error.message });
       } else {
-        res.status(500).json({ error: 'Update failed', details: String(error) });
+        res
+          .status(500)
+          .json({ error: 'Update failed', details: String(error) });
       }
     }
-    
   }
 
   static delete(req: Request, res: Response) {

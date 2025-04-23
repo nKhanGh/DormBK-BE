@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 
 class StatisticController {
   static getCountDisciplined(req: Request, res: Response) {}
