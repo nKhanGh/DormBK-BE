@@ -17,6 +17,55 @@ model Address {
   @@id([ssn, commune, district, province])
 }
 
+model Email {
+  ssn    String @db.Char(8)
+  email  String @db.VarChar(50)
+  People People @relation(fields: [ssn], references: [SSN], onDelete: Cascade, map: "fk_email")
+
+  @@id([ssn, email])
+}
+
+model PhoneNumber {
+  ssn         String @db.Char(8)
+  phoneNumber String @db.Char(10)
+  People      People @relation(fields: [ssn], references: [SSN], onDelete: Cascade, map: "fk_phoneNumber")
+
+  @@id([ssn, phoneNumber])
+}
+
+model People {
+  SSN          String        @id @db.Char(8)
+  Full_Name    String        @db.VarChar(20)
+  Last_Name    String        @db.VarChar(20)
+  Birthday     DateTime      @db.Date
+  Sex          String?       @db.Char(1)
+  Health_State String?       @db.VarChar(100)
+  Ethnic_Group String?       @db.VarChar(30)
+  Address      Address[]
+  Email        Email[]
+  PhoneNumber  PhoneNumber[]
+  employee     employee?
+  student      student?
+}
+
+model student {
+  Sssn               String              @id @db.Char(8)
+  studentId          String              @db.Char(8)
+  hasHealthInsurance Boolean
+  studyStatus        String?             @db.VarChar(20)
+  className          String?             @db.VarChar(20)
+  faculty            String?             @db.VarChar(50)
+  building_id        String?             @db.Char(5)
+  room_id            String?             @db.Char(5)
+  Dormitory_Card     Dormitory_Card[]
+  relative           relative[]
+  People             People              @relation(fields: [Sssn], references: [SSN], onDelete: Cascade, map: "fk_student_p")
+  living_room        living_room?        @relation(fields: [building_id, room_id], references: [building_id, room_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_student_room")
+  studentDiscipline  studentDiscipline[]
+
+  @@index([building_id, room_id], map: "fk_student_room")
+}
+
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model Dormitory_Card {
   Number        String        @id @db.Char(7)
@@ -28,14 +77,6 @@ model Dormitory_Card {
   student       student       @relation(fields: [ID_Card], references: [Sssn], onDelete: Cascade, map: "Dormitory_Card_ibfk_2")
 
   @@index([ID_Card], map: "ID_Card")
-}
-
-model Email {
-  ssn    String @db.Char(8)
-  email  String @db.VarChar(50)
-  People People @relation(fields: [ssn], references: [SSN], onDelete: Cascade, map: "fk_email")
-
-  @@id([ssn, email])
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -59,28 +100,6 @@ model Identity_Card {
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model People {
-  SSN          String        @id @db.Char(8)
-  Full_Name    String        @db.VarChar(20)
-  Last_Name    String        @db.VarChar(20)
-  Birthday     DateTime      @db.Date
-  Sex          String?       @db.Char(1)
-  Health_State String?       @db.VarChar(100)
-  Ethnic_Group String?       @db.VarChar(30)
-  Address      Address[]
-  Email        Email[]
-  PhoneNumber  PhoneNumber[]
-  employee     employee?
-  student      student?
-}
-
-model PhoneNumber {
-  ssn         String @db.Char(8)
-  phoneNumber String @db.Char(10)
-  People      People @relation(fields: [ssn], references: [SSN], onDelete: Cascade, map: "fk_phoneNumber")
-
-  @@id([ssn, phoneNumber])
-}
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model building {
@@ -303,24 +322,6 @@ model room {
   building        building         @relation(fields: [building_id], references: [building_id], onDelete: Cascade, map: "fk_room_building")
 
   @@id([building_id, room_id])
-}
-
-model student {
-  Sssn               String              @id @db.Char(8)
-  studentId          String              @db.Char(8)
-  hasHealthInsurance Boolean
-  studyStatus        String?             @db.VarChar(20)
-  className          String?             @db.VarChar(20)
-  faculty            String?             @db.VarChar(50)
-  building_id        String?             @db.Char(5)
-  room_id            String?             @db.Char(5)
-  Dormitory_Card     Dormitory_Card[]
-  relative           relative[]
-  People             People              @relation(fields: [Sssn], references: [SSN], onDelete: Cascade, map: "fk_student_p")
-  living_room        living_room?        @relation(fields: [building_id, room_id], references: [building_id, room_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_student_room")
-  studentDiscipline  studentDiscipline[]
-
-  @@index([building_id, room_id], map: "fk_student_room")
 }
 
 model studentDiscipline {
