@@ -5,7 +5,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts",
+    "dev": "ts-node -r tsconfig-paths/register src/index.ts",
     "prepare": "husky",
     "postinstall": "prisma generate"
   },
@@ -32,7 +32,6 @@
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.0",
     "sequelize": "^6.37.7",
-    "tsconfig-paths": "^4.2.0",
     "zod": "^3.24.3"
   },
   "devDependencies": {
@@ -46,6 +45,7 @@
     "prettier": "^3.5.3",
     "prisma": "^6.6.0",
     "ts-node-dev": "^2.0.0",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.3"
   },
   "lint-staged": {
