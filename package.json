@@ -6,7 +6,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "ts-node -r tsconfig-paths/register src/index.ts",
-    "prepare": "npm run build"
+    "prepare": "npm run build && husky install"
   },
   "engines": {
     "node": "18.x"
