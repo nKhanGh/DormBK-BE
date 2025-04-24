@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
-import pool from '@/Config/db.config';
+import { Request, Response } from "express";
+import pool from "@/Config/db.config"
 
 class StudentController {
 
