@@ -2,7 +2,7 @@ import { z } from "zod"
 
 export const PeopleSchema = z.object({
   SSN: z.string().length(8),
-  Full_Name: z.string().max(20),
+  First_Name: z.string().max(20),
   Last_Name: z.string().max(20),
   Birthday: z.string().refine(val => !isNaN(Date.parse(val)), {
     message: "Invalid date format",

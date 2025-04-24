@@ -14,12 +14,12 @@ export async function seedUser() {
   const plainPassword = "admin123";
   const hashedPassword = await bcrypt.hash(plainPassword, 10);
 
-  const existing = await prisma.managerDorm.findFirst({
+  const existing = await prisma.manager_dorm.findFirst({
     where: { user_name },
   });
 
   if (!existing) {
-    await prisma.managerDorm.create({
+    await prisma.manager_dorm.create({
       data: {
         user_name,
         password: hashedPassword,
@@ -35,7 +35,7 @@ export async function seedUser() {
 export const login = async (data: { user_name: string; password: string }) => {
   const { user_name, password } = data;
 
-  const manager = await prisma.managerDorm.findFirst({
+  const manager = await prisma.manager_dorm.findFirst({
     where: { user_name },
   });
 

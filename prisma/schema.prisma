@@ -7,99 +7,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Address {
+model address {
   ssn      String @db.Char(8)
   commune  String @db.VarChar(30)
   district String @db.VarChar(30)
   province String @db.VarChar(30)
-  People   People @relation(fields: [ssn], references: [SSN], onDelete: Cascade, map: "fk_address")
+  people   people @relation(fields: [ssn], references: [ssn], onDelete: Cascade, map: "fk_address")
 
   @@id([ssn, commune, district, province])
 }
-
-model Email {
-  ssn    String @db.Char(8)
-  email  String @db.VarChar(50)
-  People People @relation(fields: [ssn], references: [SSN], onDelete: Cascade, map: "fk_email")
-
-  @@id([ssn, email])
-}
-
-model PhoneNumber {
-  ssn         String @db.Char(8)
-  phoneNumber String @db.Char(10)
-  People      People @relation(fields: [ssn], references: [SSN], onDelete: Cascade, map: "fk_phoneNumber")
-
-  @@id([ssn, phoneNumber])
-}
-
-model People {
-  SSN          String        @id @db.Char(8)
-  Full_Name    String        @db.VarChar(20)
-  Last_Name    String        @db.VarChar(20)
-  Birthday     DateTime      @db.Date
-  Sex          String?       @db.Char(1)
-  Health_State String?       @db.VarChar(100)
-  Ethnic_Group String?       @db.VarChar(30)
-  Address      Address[]
-  Email        Email[]
-  PhoneNumber  PhoneNumber[]
-  employee     employee?
-  student      student?
-}
-
-model student {
-  Sssn               String              @id @db.Char(8)
-  studentId          String              @db.Char(8)
-  hasHealthInsurance Boolean
-  studyStatus        String?             @db.VarChar(20)
-  className          String?             @db.VarChar(20)
-  faculty            String?             @db.VarChar(50)
-  building_id        String?             @db.Char(5)
-  room_id            String?             @db.Char(5)
-  Dormitory_Card     Dormitory_Card[]
-  relative           relative[]
-  People             People              @relation(fields: [Sssn], references: [SSN], onDelete: Cascade, map: "fk_student_p")
-  living_room        living_room?        @relation(fields: [building_id, room_id], references: [building_id, room_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_student_room")
-  studentDiscipline  studentDiscipline[]
-
-  @@index([building_id, room_id], map: "fk_student_room")
-}
-
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model Dormitory_Card {
-  Number        String        @id @db.Char(7)
-  Start_Date    DateTime?     @db.Date
-  End_Date      DateTime?     @db.Date
-  ID_Card       String        @db.Char(8)
-  Validity      Boolean?      @default(true)
-  Identity_Card Identity_Card @relation(fields: [Number], references: [ID], onDelete: Cascade, map: "Dormitory_Card_ibfk_1")
-  student       student       @relation(fields: [ID_Card], references: [Sssn], onDelete: Cascade, map: "Dormitory_Card_ibfk_2")
-
-  @@index([ID_Card], map: "ID_Card")
-}
-
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model Employee_Card {
-  Number        String        @id @db.Char(7)
-  Start_Date    DateTime?     @db.Date
-  End_Date      DateTime?     @db.Date
-  ID_Card       String        @db.Char(8)
-  Employee_Type String?       @db.Char(10)
-  Identity_Card Identity_Card @relation(fields: [Number], references: [ID], onDelete: Cascade, map: "Employee_Card_ibfk_1")
-  employee      employee      @relation(fields: [ID_Card], references: [essn], onDelete: Cascade, map: "Employee_Card_ibfk_2")
-
-  @@index([ID_Card], map: "ID_Card")
-}
-
-model Identity_Card {
-  ID             String          @id @db.Char(7)
-  Issued_Date    DateTime        @db.Date
-  Dormitory_Card Dormitory_Card?
-  Employee_Card  Employee_Card?
-}
-
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model building {
@@ -128,38 +44,72 @@ model building_equipment {
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model disciplinaryAction {
-  actionId          String              @id @db.VarChar(20)
-  actionType        String              @db.VarChar(50)
-  reason            String              @db.Text
-  decisionDate      DateTime            @db.Date
-  effectiveFrom     DateTime            @db.Date
-  effectiveTo       DateTime?           @db.Date
-  severityLevel     String?             @db.VarChar(20)
-  status            String?             @db.VarChar(20)
-  disciplineStaff   disciplineStaff[]
-  studentDiscipline studentDiscipline[]
+model disciplinary_action {
+  action_id          String               @id @db.VarChar(20)
+  action_type        String               @db.VarChar(50)
+  reason             String               @db.Text
+  decision_date      DateTime             @db.Date
+  effective_from     DateTime             @db.Date
+  effective_to       DateTime?            @db.Date
+  severity_level     String?              @db.VarChar(20)
+  status             String?              @db.VarChar(20)
+  discipline_staff   discipline_staff[]
+  student_discipline student_discipline[]
 }
 
-model disciplineStaff {
-  actionId           String             @db.VarChar(20)
-  essn               String             @db.Char(8)
-  disciplinaryAction disciplinaryAction @relation(fields: [actionId], references: [actionId], onDelete: Cascade, map: "fk_disciplineStaff_d")
-  manager_employee   manager_employee   @relation(fields: [essn], references: [essn], onDelete: Cascade, map: "fk_disciplineStaff_m")
+model discipline_staff {
+  action_id           String              @db.VarChar(20)
+  essn                String              @db.Char(8)
+  disciplinary_action disciplinary_action @relation(fields: [action_id], references: [action_id], onDelete: Cascade, map: "fk_disciplineStaff_d")
+  manager_employee    manager_employee    @relation(fields: [essn], references: [essn], onDelete: Cascade, map: "fk_disciplineStaff_m")
 
-  @@id([actionId, essn])
+  @@id([action_id, essn])
   @@index([essn], map: "fk_disciplineStaff_m")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model dormitory_card {
+  number        String        @id @db.Char(7)
+  start_date    DateTime?     @db.Date
+  end_date      DateTime?     @db.Date
+  id_card       String        @db.Char(8)
+  validity      Boolean?      @default(true)
+  identity_card identity_card @relation(fields: [number], references: [id], onDelete: Cascade, map: "dormitory_card_ibfk_1")
+  student       student       @relation(fields: [id_card], references: [sssn], onDelete: Cascade, map: "dormitory_card_ibfk_2")
+
+  @@index([id_card], map: "id_card")
+}
+
+model email {
+  ssn    String @db.Char(8)
+  email  String @db.VarChar(50)
+  people people @relation(fields: [ssn], references: [ssn], onDelete: Cascade, map: "fk_email")
+
+  @@id([ssn, email])
 }
 
 model employee {
   essn             String            @id @db.Char(8)
   salary           Decimal?          @db.Decimal(10, 0)
-  empId            String?           @db.Char(7)
-  Employee_Card    Employee_Card[]
-  People           People            @relation(fields: [essn], references: [SSN], onDelete: Cascade, map: "fk_essn")
+  emp_id           String?           @db.Char(7)
+  people           people            @relation(fields: [essn], references: [ssn], onDelete: Cascade, map: "fk_essn")
+  employee_card    employee_card[]
   manager_employee manager_employee?
   medical_employee medical_employee?
   other_employee   other_employee?
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model employee_card {
+  number        String        @id @db.Char(7)
+  start_date    DateTime?     @db.Date
+  end_date      DateTime?     @db.Date
+  id_card       String        @db.Char(8)
+  employee_type String?       @db.Char(10)
+  identity_card identity_card @relation(fields: [number], references: [id], onDelete: Cascade, map: "employee_card_ibfk_1")
+  employee      employee      @relation(fields: [id_card], references: [essn], onDelete: Cascade, map: "employee_card_ibfk_2")
+
+  @@index([id_card], map: "id_card")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -174,6 +124,13 @@ model health_room {
   medical_employee medical_employee[]
 
   @@id([building_id, room_id])
+}
+
+model identity_card {
+  id             String          @id @db.Char(7)
+  issued_date    DateTime        @db.Date
+  dormitory_card dormitory_card?
+  employee_card  employee_card?
 }
 
 model large_equipment {
@@ -212,13 +169,6 @@ model management_room {
   @@id([building_id, room_id])
 }
 
-model managerDorm {
-  user_name String @db.VarChar(50)
-  password  String @db.VarChar(255)
-
-  @@id([user_name, password])
-}
-
 model manager_degree {
   essn             String           @db.Char(8)
   degree           String           @db.VarChar(50)
@@ -227,15 +177,22 @@ model manager_degree {
   @@id([essn, degree])
 }
 
+model manager_dorm {
+  user_name String @db.VarChar(50)
+  password  String @db.VarChar(255)
+
+  @@id([user_name, password])
+}
+
 model manager_employee {
-  essn            String            @id @db.Char(8)
-  room_id         String?           @db.Char(5)
-  building_id     String?           @db.Char(5)
-  experience      Decimal?          @db.Decimal(2, 0)
-  disciplineStaff disciplineStaff[]
-  manager_degree  manager_degree[]
-  management_room management_room?  @relation(fields: [building_id, room_id], references: [building_id, room_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_manager_employee_room")
-  employee        employee          @relation(fields: [essn], references: [essn], onDelete: Cascade, map: "fk_mgr_essn")
+  essn             String             @id @db.Char(8)
+  room_id          String?            @db.Char(5)
+  building_id      String?            @db.Char(5)
+  experience       Decimal?           @db.Decimal(2, 0)
+  discipline_staff discipline_staff[]
+  manager_degree   manager_degree[]
+  management_room  management_room?   @relation(fields: [building_id, room_id], references: [building_id, room_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_manager_employee_room")
+  employee         employee           @relation(fields: [essn], references: [essn], onDelete: Cascade, map: "fk_mgr_essn")
 
   @@index([building_id, room_id], map: "fk_manager_employee_room")
 }
@@ -264,7 +221,7 @@ model other_employee {
   essn                     String                     @id @db.Char(8)
   room_id                  String?                    @db.Char(5)
   building_id              String?                    @db.Char(5)
-  typeWork                 String?                    @db.VarChar(20)
+  type_work                String?                    @db.VarChar(20)
   employee                 employee                   @relation(fields: [essn], references: [essn], onDelete: Cascade, map: "fk_oth_essn")
   other_room               other_room?                @relation(fields: [building_id, room_id], references: [building_id, room_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_other_employee_room")
   other_employee_time_work other_employee_time_work[]
@@ -287,27 +244,51 @@ model other_room {
   building_id    String           @db.Char(5)
   room_id        String           @db.Char(5)
   room_type      String           @db.VarChar(100)
-  num_of_staff   Int              @default(0)
   start_time     DateTime         @db.Time(0)
   end_time       DateTime         @db.Time(0)
+  num_of_staff   Int              @default(0)
   other_employee other_employee[]
   room           room             @relation(fields: [building_id, room_id], references: [building_id, room_id], onDelete: Cascade, map: "fk_other_room")
 
   @@id([building_id, room_id])
 }
 
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model people {
+  ssn          String         @id @db.Char(8)
+  last_name    String         @db.VarChar(20)
+  first_name   String         @db.VarChar(20)
+  birthday     DateTime       @db.Date
+  sex          String?        @db.Char(1)
+  health_state String?        @db.VarChar(100)
+  ethnic_group String?        @db.VarChar(30)
+  address      address[]
+  email        email[]
+  employee     employee?
+  phone_number phone_number[]
+  student      student?
+}
+
+model phone_number {
+  ssn          String @db.Char(8)
+  phone_number String @db.Char(10)
+  people       people @relation(fields: [ssn], references: [ssn], onDelete: Cascade, map: "fk_phone_number")
+
+  @@id([ssn, phone_number])
+}
+
 model relative {
-  Sssn         String   @db.Char(8)
+  sssn         String   @db.Char(8)
   fname        String   @db.VarChar(20)
   lname        String   @db.VarChar(20)
   birthday     DateTime @db.Date
   relationship String   @db.VarChar(50)
   address      String   @db.VarChar(255)
-  phoneNumber  String?  @db.Char(10)
+  phone_number String?  @db.Char(10)
   job          String?  @db.VarChar(50)
-  student      student  @relation(fields: [Sssn], references: [Sssn], onDelete: Cascade, map: "fk_relative")
+  student      student  @relation(fields: [sssn], references: [sssn], onDelete: Cascade, map: "fk_relative")
 
-  @@id([Sssn, fname, lname])
+  @@id([sssn, fname, lname])
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -324,14 +305,32 @@ model room {
   @@id([building_id, room_id])
 }
 
-model studentDiscipline {
-  actionId           String             @db.VarChar(20)
-  Sssn               String             @db.Char(8)
-  disciplinaryAction disciplinaryAction @relation(fields: [actionId], references: [actionId], onDelete: Cascade, map: "fk_studentDiscipline_d")
-  student            student            @relation(fields: [Sssn], references: [Sssn], onDelete: Cascade, map: "fk_studentDiscipline_s")
+model student {
+  sssn                 String               @id @db.Char(8)
+  student_id           String               @db.Char(7)
+  has_health_insurance Boolean
+  study_status         String?              @db.VarChar(20)
+  class_name           String?              @db.VarChar(20)
+  faculty              String?              @db.VarChar(50)
+  building_id          String?              @db.Char(5)
+  room_id              String?              @db.Char(5)
+  dormitory_card       dormitory_card[]
+  relative             relative[]
+  people               people               @relation(fields: [sssn], references: [ssn], onDelete: Cascade, map: "fk_student_p")
+  living_room          living_room?         @relation(fields: [building_id, room_id], references: [building_id, room_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_student_room")
+  student_discipline   student_discipline[]
 
-  @@id([actionId, Sssn])
-  @@index([Sssn], map: "fk_studentDiscipline_s")
+  @@index([building_id, room_id], map: "fk_student_room")
+}
+
+model student_discipline {
+  action_id           String              @db.VarChar(20)
+  sssn                String              @db.Char(8)
+  disciplinary_action disciplinary_action @relation(fields: [action_id], references: [action_id], onDelete: Cascade, map: "fk_student_discipline_d")
+  student             student             @relation(fields: [sssn], references: [sssn], onDelete: Cascade, map: "fk_student_discipline_s")
+
+  @@id([action_id, sssn])
+  @@index([sssn], map: "fk_student_discipline_s")
 }
 
 enum other_employee_time_work_date_work {
