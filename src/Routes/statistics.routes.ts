@@ -1,15 +1,28 @@
 import express from 'express';
-const router = express.Router();
-import StatisticController from '../App/Controllers/statistics.controller';
+import { StatisticsController } from '@/App/Controllers/statistics.controller';
+import { validateAll } from '@/App/Middlewares/validate';
+import {
+  GetDisciplinedStudents,
+  BuildingIdParams,
+} from '@/App/Validations/statistics.validator';
 
-router.get('/disciplined-students', StatisticController.getCountDisciplined);
-router.get(
-  '/total-students/:buildingId',
-  StatisticController.getTotalStudentByBuilding,
-);
-router.get(
-  '/valid-dormitory-cards',
-  StatisticController.getNumValidityDormCard,
-);
+const statisticsRouter = express.Router();
+const statisticsController = new StatisticsController();
 
-export default router;
+statisticsRouter
+  .get(
+    '/disciplined-students',
+    validateAll({ query: GetDisciplinedStudents }),
+    statisticsController.getDisciplinedStudents.bind(statisticsController),
+  )
+  .get(
+    '/total-students/:buildingId',
+    validateAll({ params: BuildingIdParams }),
+    statisticsController.getTotalStudentsByBuilding.bind(statisticsController),
+  )
+  .get(
+    '/valid-dormitory-cards',
+    statisticsController.getValidDormitoryCards.bind(statisticsController),
+  );
+
+export default statisticsRouter;
