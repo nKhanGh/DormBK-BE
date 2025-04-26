@@ -1,15 +1,28 @@
 import express from 'express';
-const router = express.Router();
-import RoomController from '../App/Controllers/rooms.controller';
+import { RoomsController } from '@/App/Controllers/rooms.controller';
+import { validateAll } from '@/App/Middlewares/validate';
+import {
+  BuildingIdParams,
+  RoomCheckParams,
+} from '@/App/Validations/rooms.validator';
 
-router.get('/underoccupied', RoomController.getUnderoccupied);
-router.get(
-  '/underoccupied/:buildingId',
-  RoomController.getUnderoccupiedBuilding,
-);
-router.get(
-  '/underoccupied/:buildingId/:roomId',
-  RoomController.getUnderoccupiedBuildingRoom,
-);
+const roomsRouter = express.Router();
+const roomsController = new RoomsController();
 
-export default router;
+roomsRouter
+  .get(
+    '/underoccupied',
+    roomsController.getUnderoccupiedRooms.bind(roomsController),
+  )
+  .get(
+    '/underoccupied/:buildingId',
+    validateAll({ params: BuildingIdParams }),
+    roomsController.getUnderoccupiedRoomsByBuildingId.bind(roomsController),
+  )
+  .get(
+    '/underoccupied/:buildingId/:roomId',
+    validateAll({ params: RoomCheckParams }),
+    roomsController.checkUnderoccupiedRoom.bind(roomsController),
+  );
+
+export default roomsRouter;

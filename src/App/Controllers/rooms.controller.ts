@@ -1,15 +1,54 @@
 import { Request, Response } from 'express';
+import {
+  BuildingIdParamsDto,
+  RoomCheckParamsDto,
+} from '../Validations/rooms.validator';
+import { RoomsService } from '@/Services/rooms.service';
 
-class RoomController {
-  static getUnderoccupied(req: Request, res: Response) {
-    //todo
+export class RoomsController {
+  private roomsService: RoomsService;
+
+  constructor() {
+    this.roomsService = new RoomsService();
+    console.log('RoomsController initialized');
   }
-  static getUnderoccupiedBuilding(req: Request, res: Response) {
-    //todo
+
+  async getUnderoccupiedRooms(_req: Request, res: Response): Promise<void> {
+    try {
+      const result = await this.roomsService.getUnderoccupiedRooms();
+      res.json({ result });
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to list all underoccupied rooms' });
+    }
   }
-  static getUnderoccupiedBuildingRoom(req: Request, res: Response) {
-    //todo
+
+  async getUnderoccupiedRoomsByBuildingId(
+    req: Request<BuildingIdParamsDto>,
+    res: Response,
+  ): Promise<void> {
+    try {
+      const { buildingId } = req.params;
+      const result =
+        await this.roomsService.getUnderoccupiedRoomsByBuildingId(buildingId);
+      res.json({ result });
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to get rooms by building' });
+    }
+  }
+
+  async checkUnderoccupiedRoom(
+    req: Request<RoomCheckParamsDto>,
+    res: Response,
+  ): Promise<void> {
+    try {
+      const { buildingId, roomId } = req.params;
+      const result = await this.roomsService.checkUnderoccupiedRoom(
+        buildingId,
+        roomId,
+      );
+      res.json({ result });
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to check one room' });
+    }
   }
 }
-
-export default RoomController;

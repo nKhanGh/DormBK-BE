@@ -1,6 +1,7 @@
 import express from 'express';
 import route from './Routes/index';
 import cors from 'cors';
+import pool from './Config/db.config';
 
 const app = express();
 app.use(cors());
@@ -15,6 +16,16 @@ app.use(
 app.use(express.json());
 
 route(app);
+
+(async () => {
+  try {
+    const conn = await pool.getConnection();
+    console.log('✅ Connected to MySQL');
+    conn.release();
+  } catch (err) {
+    console.error('❌ Cannot connect to MySQL:', err);
+  }
+})();
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
