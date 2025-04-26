@@ -1,6 +1,8 @@
 export interface Student {
+  new_ssn: string;
   ssn: string;
-  full_name: string;
+  first_name: string;
+  last_name: string;
   birthday: string;
   sex: string;
   health_state: string | null;
@@ -12,7 +14,7 @@ export interface Student {
   faculty: string | null;
   building_id: string;
   room_id: string;
-  phones: string;
+  phone_numbers: string;
   emails: string;
   addresses: string;
 }
