@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { login } from '../../Services/auth.services';
+import { login } from '../../Services/auth.service';
 
 class AuthController {
   static async postLogin(req: Request, res: Response) {
@@ -7,7 +7,9 @@ class AuthController {
       const result = await login(req.body);
       res.status(200).json(result);
     } catch (error: any) {
-      res.status(401).json({ message: error.message });
+      const statusCode = error.statusCode || 500;
+      const message = error.message || 'An unexpected error occurred';
+      res.status(statusCode).json({ message });
     }
   }
 

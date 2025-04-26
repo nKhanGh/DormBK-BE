@@ -1,45 +1,43 @@
-// import Joi from 'joi';
+import { z } from 'zod';
 
-// const addressSchema = Joi.object({
-//   commune: Joi.string().max(30).required(),
-//   district: Joi.string().max(30).required(),
-//   province: Joi.string().max(30).required(),
-// });
+export const SsnParam = z.object({
+  ssn: z.string().length(8, {
+    message: 'SSN must be exactly 8 characters long',
+  }),
+});
 
-// const emailSchema = Joi.object({
-//   email: Joi.string().email().max(50).required(),
-// });
+export const StudentBody = z.object({
+  ssn: z.string().trim().length(8, {
+    message: 'SSN must be exactly 8 characters long',
+  }),
+  new_ssn: z.string().trim().length(8, {
+    message: 'New SSN must be exactly 8 characters long',
+  }),
+  first_name: z.string().trim().min(1, {
+    message: 'First name is required',
+  }),
+  last_name: z.string().trim().min(1, {
+    message: 'Last name is required',
+  }),
+  birthday: z.string().refine((val) => !isNaN(Date.parse(val)), {
+    message: 'Invalid date format',
+  }),
+  sex: z.enum(['M', 'F']),
+  health_state: z.string(),
+  ethnic_group: z.string(),
+  student_id: z.string().trim().length(7, {
+    message: 'Student ID must be exactly 7 characters long',
+  }),
+  has_health_insurance: z.boolean(),
+  study_status: z.string().optional(),
+  class_name: z.string(),
+  faculty: z.string(),
+  building_id: z.string().nullable(),
+  room_id: z.string().nullable(),
+  phone_numbers: z.string().optional(),
+  emails: z.string().optional(),
+  addresses: z.string().optional(),
+});
 
-// const phoneSchema = Joi.object({
-//   phoneNumber: Joi.string().pattern(/^\d{10}$/).required().messages({
-//     'string.pattern.base': 'Phone number must be exactly 10 digits',
-//   }),
-// });
-
-// const peopleSchema = Joi.object({
-//   SSN: Joi.string().length(8).required(),
-//   Full_Name: Joi.string().max(20).required(),
-//   Last_Name: Joi.string().max(20).required(),
-//   Birthday: Joi.date().iso().required(),
-//   Sex: Joi.string().valid('M', 'F').optional(),
-//   Health_State: Joi.string().max(100).optional(),
-//   Ethnic_Group: Joi.string().max(30).optional(),
-// });
-
-// const studentSchema = Joi.object({
-//   studentId: Joi.string().length(8).required(),
-//   hasHealthInsurance: Joi.boolean().required(),
-//   studyStatus: Joi.string().max(20).optional(),
-//   className: Joi.string().max(20).optional(),
-//   faculty: Joi.string().max(50).optional(),
-//   building_id: Joi.string().length(5).optional(),
-//   room_id: Joi.string().length(5).optional(),
-// });
-
-// export const fullStudentCreateSchema = Joi.object({
-//   student: studentSchema.required(),
-//   people: peopleSchema.required(),
-//   addresses: Joi.array().items(addressSchema).min(1).required(),
-//   emails: Joi.array().items(emailSchema).min(1).required(),
-//   phones: Joi.array().items(phoneSchema).min(1).required(),
-// });
+export type SsnParamDto = z.infer<typeof SsnParam>;
+export type StudentBodyDto = z.infer<typeof StudentBody>;
