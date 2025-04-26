@@ -1,5 +1,5 @@
 import pool from '@/Config/db.config'; // Cấu hình kết nối với DB
-import { Student } from '@/Interface/student.interface';
+import { Student } from '@/Interfaces/student.interface';
 
 export class StudentService {
   static async getAllStudents(): Promise<Student[]> {

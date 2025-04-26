@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import pool from '@/Config/db.config';
+import { ApiError } from '@/utils/ApiErorr';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 
@@ -22,7 +23,6 @@ export async function seedUser() {
 }
 
 export const login = async (data: { user_name: string; password: string }) => {
-  // seedUser();
   const { user_name, password } = data;
 
   try {
@@ -32,24 +32,25 @@ export const login = async (data: { user_name: string; password: string }) => {
     );
 
     if (!rows[0].user_exists) {
-      throw new Error('Manager not found');
+      throw new ApiError(404, 'Manager not found');
     }
 
     const [managerRows]: any[] = await pool.query(
-      'SELECT * FROM manager_dorm WHERE user_name = ?',
+      'CALL get_manager_dorm_by_username(?)',
       [user_name],
     );
 
-    if (managerRows.length === 0) {
-      throw new Error('Manager not found');
+    if (managerRows[0].length === 0) {
+      throw new ApiError(404, 'Manager not found');
     }
 
-    const manager = managerRows[0];
+    const manager = managerRows[0][0];
 
     const isMatch = await bcrypt.compare(password, manager.password);
     if (!isMatch) {
-      throw new Error('Invalid credentials');
+      throw new ApiError(401, 'Invalid credentials');
     }
+
     const token = jwt.sign({ user_name: manager.user_name }, JWT_SECRET, {
       expiresIn: '1h',
     });
@@ -59,13 +60,11 @@ export const login = async (data: { user_name: string; password: string }) => {
       user: { user_name: manager.user_name },
     };
   } catch (error) {
-    if (error instanceof Error) {
-      console.error('Login error:', error.message);
-      throw new Error(error.message);
-    } else {
-      console.error('Unexpected error during login:', error);
-      throw new Error('An unexpected error occurred during login');
+    console.error('Login error:', error);
+    if (error instanceof ApiError) {
+      throw error;
     }
+    throw new ApiError(500, 'An unexpected error occurred during login');
   }
 };
 

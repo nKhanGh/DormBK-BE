@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { StudentService } from '@/Services/students.services';
-import { Student } from '@/Interface/student.interface';
+import { StudentService } from '@/Services/students.service';
+import { Student } from '@/Interfaces/student.interface';
 
 class StudentController {
   static async getStudent(req: Request, res: Response) {
@@ -64,13 +64,9 @@ class StudentController {
         building_id: student.building_id,
         room_id: student.room_id,
 
-        phone_numbers: student.phone_numbers
-          ? student.phone_numbers.split(';')
-          : [],
-        emails: student.emails ? student.emails.split(';') : [],
-        addresses: student.addresses
-          ? student.addresses.split(';').map((addr) => addr.trim())
-          : [],
+        phone_numbers: student.phone_numbers,
+        emails: student.emails,
+        addresses: student.addresses,
       };
       res.status(200).json(formatted);
     } catch (error) {
