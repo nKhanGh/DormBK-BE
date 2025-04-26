@@ -18,7 +18,7 @@ export class StudentService {
   }
 
   static async deleteStudent(ssn: string): Promise<void> {
-    await pool.query('CALL delete_person_by_ssn(?)', [ssn]);
+    await pool.query('CALL delete_student_by_ssn(?)', [ssn]);
   }
 
   static async insertStudent(student: Student): Promise<void> {

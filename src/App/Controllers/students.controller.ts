@@ -70,7 +70,6 @@ class StudentController {
       };
       res.status(200).json(formatted);
     } catch (error) {
-      console.error('Error fetching student:', error);
       res.status(500).json({ message: 'Internal Server Error' });
     }
   }
@@ -82,7 +81,6 @@ class StudentController {
       res.status(201).json({ message: 'Student created successfully' });
     } catch (error) {
       const mysqlErrorMessage = (error as any).sqlMessage || 'Unknown error';
-      console.error('Error insert student: ', error);
       res.status(500).json({ success: false, message: mysqlErrorMessage });
     }
   }
@@ -94,7 +92,6 @@ class StudentController {
       res.status(200).json({ message: 'Student updated successfully' });
     } catch (error) {
       const mysqlErrorMessage = (error as any).sqlMessage || 'Unknown error';
-      console.error('Error updating student: ', error);
       res.status(500).json({ success: false, message: mysqlErrorMessage });
     }
   }
@@ -105,7 +102,6 @@ class StudentController {
       await StudentService.deleteStudent(ssn);
       res.status(200).json({ message: 'Student deleted successfully' });
     } catch (error) {
-      console.error('Error deleting student:', error);
       res.status(500).json({ message: 'Internal Server Error' });
     }
   }

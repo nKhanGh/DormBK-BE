@@ -22,10 +22,10 @@ export class StatisticsController {
       const { totalDisciplinedStudents } =
         await this.statisticsService.getDisciplinedStudents(startDate, endDate);
       res.json({ totalDisciplinedStudents });
-    } catch (err) {
-      res
-        .status(500)
-        .json({ error: 'Failed to get disciplined students count' });
+    } catch (error) {
+      const mysqlErrorMessage = (error as any).sqlMessage || 'Unknown error';
+      console.error('Error insert student: ', error);
+      res.status(500).json({ success: false, message: mysqlErrorMessage });
     }
   }
 
@@ -38,10 +38,9 @@ export class StatisticsController {
       const { totalStudents } =
         await this.statisticsService.getTotalStudentsByBuilding(buildingId);
       res.json({ totalStudents });
-    } catch (err) {
-      res
-        .status(500)
-        .json({ error: 'Failed to get total students by building' });
+    } catch (error) {
+      const mysqlErrorMessage = (error as any).sqlMessage || 'Unknown error';
+      res.status(500).json({ success: false, message: mysqlErrorMessage });
     }
   }
 
@@ -50,10 +49,9 @@ export class StatisticsController {
       const { validDormCards } =
         await this.statisticsService.getValidDormitoryCards();
       res.json({ validDormCards });
-    } catch (err) {
-      res
-        .status(500)
-        .json({ error: 'Failed to get valid dormitory cards count' });
+    } catch (error) {
+      const mysqlErrorMessage = (error as any).sqlMessage || 'Unknown error';
+      res.status(500).json({ success: false, message: mysqlErrorMessage });
     }
   }
 }

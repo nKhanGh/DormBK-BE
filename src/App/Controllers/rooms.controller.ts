@@ -17,8 +17,9 @@ export class RoomsController {
     try {
       const result = await this.roomsService.getUnderoccupiedRooms();
       res.json({ result });
-    } catch (err) {
-      res.status(500).json({ error: 'Failed to list all underoccupied rooms' });
+    } catch (error) {
+      const mysqlErrorMessage = (error as any).sqlMessage || 'Unknown error';
+      res.status(500).json({ success: false, message: mysqlErrorMessage });
     }
   }
 
@@ -31,8 +32,9 @@ export class RoomsController {
       const result =
         await this.roomsService.getUnderoccupiedRoomsByBuildingId(buildingId);
       res.json({ result });
-    } catch (err) {
-      res.status(500).json({ error: 'Failed to get rooms by building' });
+    } catch (error) {
+      const mysqlErrorMessage = (error as any).sqlMessage || 'Unknown error';
+      res.status(500).json({ success: false, message: mysqlErrorMessage });
     }
   }
 
@@ -47,8 +49,9 @@ export class RoomsController {
         roomId,
       );
       res.json({ result });
-    } catch (err) {
-      res.status(500).json({ error: 'Failed to check one room' });
+    } catch (error) {
+      const mysqlErrorMessage = (error as any).sqlMessage || 'Unknown error';
+      res.status(500).json({ success: false, message: mysqlErrorMessage });
     }
   }
 }
