@@ -46,6 +46,7 @@ export class StudentService {
         student.emails,
       ],
     );
+    await pool.query('CALL create_dormitory_card(?)', [student.ssn]);
   }
 
   static async updateStudent(student: Student): Promise<void> {
