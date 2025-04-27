@@ -13,10 +13,37 @@ export class RoomsController {
     console.log('RoomsController initialized');
   }
 
+  async getAllRooms(_req: Request, res: Response): Promise<void> {
+    try {
+      console.log('getAllRooms called');
+      const result = await this.roomsService.getAllRooms();
+      res.json(result);
+    } catch (error) {
+      const mysqlErrorMessage = (error as any).sqlMessage || 'Unknown error';
+      res.status(500).json({ success: false, message: mysqlErrorMessage });
+    }
+  }
+
+  async getRoomsByBuildingId(
+    req: Request<BuildingIdParamsDto>,
+    res: Response,
+  ): Promise<void> {
+    try {
+      console.log('getRoomsByBuildingId called');
+      const { buildingId } = req.params;
+      const result = await this.roomsService.getRoomsByBuildingId(buildingId);
+      res.json(result);
+    } catch (error) {
+      const mysqlErrorMessage = (error as any).sqlMessage || 'Unknown error';
+      res.status(500).json({ success: false, message: mysqlErrorMessage });
+    }
+  }
+
   async getUnderoccupiedRooms(_req: Request, res: Response): Promise<void> {
     try {
+      console.log('getUnderoccupiedRooms called');
       const result = await this.roomsService.getUnderoccupiedRooms();
-      res.json({ result });
+      res.json(result);
     } catch (error) {
       const mysqlErrorMessage = (error as any).sqlMessage || 'Unknown error';
       res.status(500).json({ success: false, message: mysqlErrorMessage });
@@ -28,10 +55,11 @@ export class RoomsController {
     res: Response,
   ): Promise<void> {
     try {
+      console.log('getUnderoccupiedRoomsByBuildingId called');
       const { buildingId } = req.params;
       const result =
         await this.roomsService.getUnderoccupiedRoomsByBuildingId(buildingId);
-      res.json({ result });
+      res.json(result);
     } catch (error) {
       const mysqlErrorMessage = (error as any).sqlMessage || 'Unknown error';
       res.status(500).json({ success: false, message: mysqlErrorMessage });
@@ -48,7 +76,7 @@ export class RoomsController {
         buildingId,
         roomId,
       );
-      res.json({ result });
+      res.json(result);
     } catch (error) {
       const mysqlErrorMessage = (error as any).sqlMessage || 'Unknown error';
       res.status(500).json({ success: false, message: mysqlErrorMessage });

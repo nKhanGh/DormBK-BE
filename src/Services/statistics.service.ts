@@ -14,6 +14,10 @@ export class StatisticsService {
     startDate: string,
     endDate: string,
   ): Promise<DisciplinedStudentsResponse> {
+    if (this.isDate(startDate) || !this.isDate(endDate)) {
+      throw new Error('Invalid date format');
+    }
+
     const result = await pool.query(
       'SELECT count_disciplined_students(?, ?) AS totalDisciplinedStudents',
       [startDate, endDate],
@@ -26,6 +30,10 @@ export class StatisticsService {
   async getTotalStudentsByBuilding(
     buildingId: string,
   ): Promise<TotalStudentsByBuildingResponse> {
+    if (buildingId.length > 5) {
+      throw new Error('Building ID is exactly 5 characters long');
+    }
+
     const result = await pool.query(
       'SELECT total_students_by_building(?) AS totalStudents',
       [buildingId],
@@ -42,5 +50,9 @@ export class StatisticsService {
     const validCards = result[0] as ValidDormitoryCardsResponse[];
 
     return validCards[0];
+  }
+
+  private isDate(date: string): boolean {
+    return !isNaN(Date.parse(date));
   }
 }

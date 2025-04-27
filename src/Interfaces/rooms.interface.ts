@@ -1,4 +1,4 @@
-export interface UnderoccupiedRoom {
+export interface Room {
   buildingId: string;
   roomId: string;
   maxNumberOfStudents: number;

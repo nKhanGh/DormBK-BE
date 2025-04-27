@@ -10,6 +10,12 @@ const roomsRouter = express.Router();
 const roomsController = new RoomsController();
 
 roomsRouter
+  .get('/', roomsController.getAllRooms.bind(roomsController))
+  .get(
+    '/:buildingId',
+    validateAll({ params: BuildingIdParams }),
+    roomsController.getRoomsByBuildingId.bind(roomsController),
+  )
   .get(
     '/underoccupied',
     roomsController.getUnderoccupiedRooms.bind(roomsController),
