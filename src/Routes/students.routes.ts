@@ -9,7 +9,6 @@ router.get('/no-relatives', verifyToken, StudentController.getNoRelative);
 router.get('/', verifyToken, StudentController.getStudent);
 router.post(
   '/',
-  verifyToken,
   validateAll({ body: StudentBody }),
   StudentController.createStudent,
 );
@@ -21,7 +20,6 @@ router.get(
 );
 router.put(
   '/:ssn',
-  verifyToken,
   validateAll({ params: SsnParam, body: StudentBody }),
   StudentController.put,
 );
