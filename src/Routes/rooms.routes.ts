@@ -5,12 +5,13 @@ import {
   BuildingIdParams,
   RoomCheckParams,
 } from '@/App/Validations/rooms.validator';
+import { verifyToken } from '@/App/Middlewares/auth';
 
 const roomsRouter = express.Router();
 const roomsController = new RoomsController();
 
 roomsRouter
-  .get('/', roomsController.getAllRooms.bind(roomsController))
+  .get('/', verifyToken, roomsController.getAllRooms.bind(roomsController))
   .get(
     '/underoccupied',
     roomsController.getUnderoccupiedRooms.bind(roomsController),

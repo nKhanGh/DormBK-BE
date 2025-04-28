@@ -2,8 +2,18 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import pool from '@/Config/db.config';
 import { ApiError } from '@/utils/ApiErorr';
+import { RowDataPacket } from 'mysql2';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
+
+interface User {
+  user_name: string;
+  password: string;
+}
+
+interface UserExistsResult {
+  user_exists: number;
+}
 
 export async function seedUser() {
   try {
@@ -26,25 +36,28 @@ export const login = async (data: { user_name: string; password: string }) => {
   const { user_name, password } = data;
 
   try {
-    const [rows]: any[] = await pool.query(
+    const [rows] = await pool.query<RowDataPacket[]>(
       'SELECT check_user_exists(?) AS user_exists',
       [user_name],
     );
 
-    if (!rows[0].user_exists) {
+    const userExistsRows = rows as UserExistsResult[];
+
+    if (!userExistsRows[0]?.user_exists) {
       throw new ApiError(404, 'Manager not found');
     }
 
-    const [managerRows]: any[] = await pool.query(
+    const [managerRows] = await pool.query<RowDataPacket[][]>(
       'CALL get_manager_dorm_by_username(?)',
       [user_name],
     );
 
-    if (managerRows[0].length === 0) {
+    const managerList = managerRows[0] as User[];
+
+    const manager = managerList[0];
+    if (!manager) {
       throw new ApiError(404, 'Manager not found');
     }
-
-    const manager = managerRows[0][0];
 
     const isMatch = await bcrypt.compare(password, manager.password);
     if (!isMatch) {

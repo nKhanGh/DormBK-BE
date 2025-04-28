@@ -3,9 +3,10 @@ const router = Router();
 import StudentController from '../App/Controllers/students.controller';
 import { validateAll } from '@/App/Middlewares/validate';
 import { SsnParam, StudentBody } from '@/App/Validations/Students.validator';
+import { verifyToken } from '@/App/Middlewares/auth';
 
 router.get('/no-relatives', StudentController.getNoRelative);
-router.get('/', StudentController.getStudent);
+router.get('/', verifyToken, StudentController.getStudent);
 router.post(
   '/',
   validateAll({ body: StudentBody }),
