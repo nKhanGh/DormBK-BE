@@ -14,20 +14,24 @@ roomsRouter
   .get('/', verifyToken, roomsController.getAllRooms.bind(roomsController))
   .get(
     '/underoccupied',
+    verifyToken,
     roomsController.getUnderoccupiedRooms.bind(roomsController),
   )
   .get(
     '/:buildingId',
+    verifyToken,
     validateAll({ params: BuildingIdParams }),
     roomsController.getRoomsByBuildingId.bind(roomsController),
   )
   .get(
     '/underoccupied/:buildingId',
+    verifyToken,
     validateAll({ params: BuildingIdParams }),
     roomsController.getUnderoccupiedRoomsByBuildingId.bind(roomsController),
   )
   .get(
     '/underoccupied/:buildingId/:roomId',
+    verifyToken,
     validateAll({ params: RoomCheckParams }),
     roomsController.checkUnderoccupiedRoom.bind(roomsController),
   );

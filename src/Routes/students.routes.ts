@@ -5,25 +5,29 @@ import { validateAll } from '@/App/Middlewares/validate';
 import { SsnParam, StudentBody } from '@/App/Validations/Students.validator';
 import { verifyToken } from '@/App/Middlewares/auth';
 
-router.get('/no-relatives', StudentController.getNoRelative);
+router.get('/no-relatives', verifyToken, StudentController.getNoRelative);
 router.get('/', verifyToken, StudentController.getStudent);
 router.post(
   '/',
+  verifyToken,
   validateAll({ body: StudentBody }),
   StudentController.createStudent,
 );
 router.get(
   '/:ssn',
+  verifyToken,
   validateAll({ params: SsnParam }),
   StudentController.getStudentBySsn,
 );
 router.put(
   '/:ssn',
+  verifyToken,
   validateAll({ params: SsnParam, body: StudentBody }),
   StudentController.put,
 );
 router.delete(
   '/:ssn',
+  verifyToken,
   validateAll({ params: SsnParam }),
   StudentController.delete,
 );
