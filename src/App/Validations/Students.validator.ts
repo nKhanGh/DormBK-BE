@@ -20,23 +20,33 @@ export const StudentBody = z.object({
     message: 'Last name is required',
   }),
   birthday: z.string().refine((val) => !isNaN(Date.parse(val)), {
-    message: 'Invalid date format',
+    message: 'Birthday must be a valid date',
   }),
-  sex: z.enum(['M', 'F']),
-  health_state: z.string(),
-  ethnic_group: z.string(),
+  sex: z.enum(['M', 'F'], {
+    message: 'Sex is required',
+  }),
+  health_state: z.string().nullable(),
+  ethnic_group: z.string({
+    message: 'Ethnic group is required',
+  }),
   student_id: z.string().trim().length(7, {
     message: 'Student ID must be exactly 7 characters long',
   }),
-  has_health_insurance: z.boolean(),
-  study_status: z.string().optional(),
-  class_name: z.string(),
-  faculty: z.string(),
-  building_id: z.string().nullable(),
-  room_id: z.string().nullable(),
-  phone_numbers: z.string().optional(),
-  emails: z.string().optional(),
-  addresses: z.string().optional(),
+  has_health_insurance: z.boolean().nullable(),
+  study_status: z.string({
+    message: 'Study status is required',
+  }),
+  class_name: z.string().nullable(),
+  faculty: z.string().nullable(),
+  building_id: z.string({
+    message: 'Building ID is required',
+  }),
+  room_id: z.string({
+    message: 'Room ID is required',
+  }),
+  phone_numbers: z.string().nullable(),
+  emails: z.string().nullable(),
+  addresses: z.string().nullable(),
 });
 
 export type SsnParamDto = z.infer<typeof SsnParam>;
