@@ -24,5 +24,4 @@ class DormitoryCardController {
     }
   }
 }
-
 export default DormitoryCardController;
