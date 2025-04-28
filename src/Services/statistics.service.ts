@@ -14,10 +14,6 @@ export class StatisticsService {
     startDate: string,
     endDate: string,
   ): Promise<DisciplinedStudentsResponse> {
-    if (this.isDate(startDate) || !this.isDate(endDate)) {
-      throw new Error('Invalid date format');
-    }
-
     const result = await pool.query(
       'SELECT count_disciplined_students(?, ?) AS totalDisciplinedStudents',
       [startDate, endDate],
@@ -50,9 +46,5 @@ export class StatisticsService {
     const validCards = result[0] as ValidDormitoryCardsResponse[];
 
     return validCards[0];
-  }
-
-  private isDate(date: string): boolean {
-    return !isNaN(Date.parse(date));
   }
 }
