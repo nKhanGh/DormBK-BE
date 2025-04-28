@@ -4,6 +4,7 @@ import {
   GetDisciplinedStudentsDto,
   BuildingIdParamsDto,
 } from '../Validations/statistics.validator';
+import { QueryError } from 'mysql2';
 
 export class StatisticsController {
   private statisticsService: StatisticsService;
@@ -23,7 +24,8 @@ export class StatisticsController {
         await this.statisticsService.getDisciplinedStudents(startDate, endDate);
       res.json({ totalDisciplinedStudents });
     } catch (error) {
-      const mysqlErrorMessage = (error as any).sqlMessage || 'Unknown error';
+      const mysqlErrorMessage =
+        (error as QueryError).message || 'Unknown error';
       console.error('Error insert student: ', error);
       res.status(500).json({ success: false, message: mysqlErrorMessage });
     }
@@ -39,7 +41,8 @@ export class StatisticsController {
         await this.statisticsService.getTotalStudentsByBuilding(buildingId);
       res.json({ totalStudents });
     } catch (error) {
-      const mysqlErrorMessage = (error as any).sqlMessage || 'Unknown error';
+      const mysqlErrorMessage =
+        (error as QueryError).message || 'Unknown error';
       res.status(500).json({ success: false, message: mysqlErrorMessage });
     }
   }
@@ -50,7 +53,8 @@ export class StatisticsController {
         await this.statisticsService.getValidDormitoryCards();
       res.json({ validDormCards });
     } catch (error) {
-      const mysqlErrorMessage = (error as any).sqlMessage || 'Unknown error';
+      const mysqlErrorMessage =
+        (error as QueryError).message || 'Unknown error';
       res.status(500).json({ success: false, message: mysqlErrorMessage });
     }
   }

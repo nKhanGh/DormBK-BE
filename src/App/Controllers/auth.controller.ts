@@ -6,10 +6,11 @@ class AuthController {
     try {
       const result = await login(req.body);
       res.status(200).json(result);
-    } catch (error: any) {
-      const statusCode = error.statusCode || 500;
-      const message = error.message || 'An unexpected error occurred';
-      res.status(statusCode).json({ message });
+    } catch (error) {
+      const err = error as { statusCode?: number; message?: string };
+      res
+        .status(err.statusCode ?? 500)
+        .json({ message: err.message ?? 'An unexpected error occurred' });
     }
   }
 

@@ -3,18 +3,36 @@ import { Student } from '@/Interfaces/student.interface';
 
 export class StudentService {
   static async getAllStudents(): Promise<Student[]> {
-    const [rows] = await pool.query('CALL get_student()');
-    return (rows as any[])[0];
+    const result = await pool.query('CALL get_student()');
+    const rows = result[0];
+
+    if (Array.isArray(rows) && Array.isArray(rows[0])) {
+      return rows[0] as Student[];
+    } else {
+      throw new Error('Unexpected result format');
+    }
   }
 
   static async getNotFamilyStudent(): Promise<Student[]> {
-    const [rows] = await pool.query('CALL list_student_not_family()');
-    return (rows as any[])[0];
+    const result = await pool.query('CALL list_student_not_family()');
+    const rows = result[0];
+
+    if (Array.isArray(rows) && Array.isArray(rows[0])) {
+      return rows[0] as Student[];
+    } else {
+      throw new Error('Unexpected result format');
+    }
   }
 
   static async getStudentBySsn(ssn: string): Promise<Student[]> {
-    const [rows] = await pool.query('CALL get_student_by_ssn(?)', [ssn]);
-    return (rows as any[])[0];
+    const result = await pool.query('CALL get_student_by_ssn(?)', [ssn]);
+    const rows = result[0];
+
+    if (Array.isArray(rows) && Array.isArray(rows[0])) {
+      return rows[0] as Student[];
+    } else {
+      throw new Error('Unexpected result format');
+    }
   }
 
   static async deleteStudent(ssn: string): Promise<void> {

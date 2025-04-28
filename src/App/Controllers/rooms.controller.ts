@@ -4,6 +4,7 @@ import {
   RoomCheckParamsDto,
 } from '../Validations/rooms.validator';
 import { RoomsService } from '@/Services/rooms.service';
+import { QueryError } from 'mysql2';
 
 export class RoomsController {
   private roomsService: RoomsService;
@@ -19,7 +20,8 @@ export class RoomsController {
       const result = await this.roomsService.getAllRooms();
       res.json(result);
     } catch (error) {
-      const mysqlErrorMessage = (error as any).sqlMessage || 'Unknown error';
+      const mysqlErrorMessage =
+        (error as QueryError).message || 'Unknown error';
       res.status(500).json({ success: false, message: mysqlErrorMessage });
     }
   }
@@ -34,7 +36,8 @@ export class RoomsController {
       const result = await this.roomsService.getRoomsByBuildingId(buildingId);
       res.json(result);
     } catch (error) {
-      const mysqlErrorMessage = (error as any).sqlMessage || 'Unknown error';
+      const mysqlErrorMessage =
+        (error as QueryError).message || 'Unknown error';
       res.status(500).json({ success: false, message: mysqlErrorMessage });
     }
   }
@@ -45,7 +48,8 @@ export class RoomsController {
       const result = await this.roomsService.getUnderoccupiedRooms();
       res.json(result);
     } catch (error) {
-      const mysqlErrorMessage = (error as any).sqlMessage || 'Unknown error';
+      const mysqlErrorMessage =
+        (error as QueryError).message || 'Unknown error';
       res.status(500).json({ success: false, message: mysqlErrorMessage });
     }
   }
@@ -61,7 +65,8 @@ export class RoomsController {
         await this.roomsService.getUnderoccupiedRoomsByBuildingId(buildingId);
       res.json(result);
     } catch (error) {
-      const mysqlErrorMessage = (error as any).sqlMessage || 'Unknown error';
+      const mysqlErrorMessage =
+        (error as QueryError).message || 'Unknown error';
       res.status(500).json({ success: false, message: mysqlErrorMessage });
     }
   }
@@ -78,7 +83,8 @@ export class RoomsController {
       );
       res.json(result);
     } catch (error) {
-      const mysqlErrorMessage = (error as any).sqlMessage || 'Unknown error';
+      const mysqlErrorMessage =
+        (error as QueryError).message || 'Unknown error';
       res.status(500).json({ success: false, message: mysqlErrorMessage });
     }
   }

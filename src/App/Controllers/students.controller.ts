@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { StudentService } from '@/Services/students.service';
 import { Student } from '@/Interfaces/student.interface';
+import { QueryError } from 'mysql2';
 
 class StudentController {
   static async getStudent(req: Request, res: Response) {
@@ -80,7 +81,8 @@ class StudentController {
       await StudentService.insertStudent(student);
       res.status(201).json({ message: 'Student created successfully' });
     } catch (error) {
-      const mysqlErrorMessage = (error as any).sqlMessage || 'Unknown error';
+      const mysqlErrorMessage =
+        (error as QueryError).message || 'Unknown error';
       res.status(500).json({ success: false, message: mysqlErrorMessage });
     }
   }
@@ -91,7 +93,8 @@ class StudentController {
       await StudentService.updateStudent(student);
       res.status(200).json({ message: 'Student updated successfully' });
     } catch (error) {
-      const mysqlErrorMessage = (error as any).sqlMessage || 'Unknown error';
+      const mysqlErrorMessage =
+        (error as QueryError).message || 'Unknown error';
       res.status(500).json({ success: false, message: mysqlErrorMessage });
     }
   }
